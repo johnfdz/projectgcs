@@ -52,14 +52,14 @@ export function HomePage() {
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
+            href="/citas/nuevacita"
           >
             Agendar Cita
           </Link>
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48" id="hero">
+        <section className="w-full py-6 md:py-12 lg:py-24 xl:py-32" id="hero">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <Image
