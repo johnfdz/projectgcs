@@ -13,51 +13,54 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/es";
+import { Event } from "@prisma/client";
+import { createEvent, deleteEvent } from "@/Events/actions";
+import { useRouter } from "next/navigation";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 moment.locale("es");
 const localizer = momentLocalizer(moment);
 
-interface Event {
-  title: string;
-  start: Date;
-  end: Date;
+interface Props {
+  events: Event[];
 }
 
-export const MyCalendar = () => {
-  const [events, setEvents] = useState<Event[]>([]);
+export const MyCalendar = ({ events = [] }: Props) => {
+  // const [events, setEvents] = useState<Event[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [eventTitle, setEventTitle] = useState("");
   const [selectEvent, setSelectEvent] = useState<Event | null>(null);
+  const router = useRouter();
 
   const handleSelectSlot = (slotInfo: any) => {
     setShowModal(true);
     setSelectedDate(slotInfo.start);
     setSelectEvent(null);
   };
-  const handleSelectedEvent = (event: any) => {
+  const handleSelectedEvent = async (event: Event) => {
     setShowModal(true);
     setSelectEvent(event);
-    setEventTitle(event.title);
+    setEventTitle(event.name);
   };
 
-  const saveEvent = () => {
+  const saveEvent = async () => {
     if (eventTitle && selectedDate) {
       if (selectEvent) {
-        const updatedEvent = { ...selectEvent, title: eventTitle };
-        const updatedEvents = events.map((event) =>
-          event === selectEvent ? updatedEvent : event
-        );
-        setEvents(updatedEvents);
+        // const updatedEvent = { ...selectEvent, title: eventTitle };
+        // const updatedEvents = events.map((event) =>
+        //   event === selectEvent ? updatedEvent : event
+        // );
+        // setEvents(updatedEvents);
       } else {
         const newEvent = {
-          title: eventTitle,
+          name: eventTitle,
           start: selectedDate,
           end: moment(selectedDate).add(1, "hours").toDate(),
         };
-        setEvents([...events, newEvent]);
+        await createEvent(newEvent.name, newEvent.start, newEvent.end);
+        router.refresh();
       }
       setShowModal(false);
       setEventTitle("");
@@ -65,13 +68,13 @@ export const MyCalendar = () => {
     }
   };
 
-  const deleteEvents = () => {
+  const deleteEvents = async () => {
     if (selectEvent) {
-      const updatedEvents = events.filter((event) => event !== selectEvent);
-      setEvents(updatedEvents);
+      await deleteEvent(selectEvent.id);
       setShowModal(false);
       setEventTitle("");
       setSelectEvent(null);
+      router.refresh();
     }
   };
 
