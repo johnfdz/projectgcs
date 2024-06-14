@@ -4,6 +4,8 @@
 import { Yeseva_One } from "next/font/google";
 import { DM_Serif_Display } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components/component/navbar";
+import AuthProvider from "@/auth/components/AuthProvider";
 
 const yeseva_one = Yeseva_One({
   subsets: ["latin"],
@@ -20,10 +22,13 @@ const dm_serif_display = DM_Serif_Display({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={yeseva_one.variable + " " + dm_serif_display.variable}>
-        {children}
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <body className={yeseva_one.variable + " " + dm_serif_display.variable}>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

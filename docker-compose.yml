@@ -1,15 +1,15 @@
 version: '3.9'
 
 services:
-  peluqueria:
+  peluqueriDB:
     image: postgres:16.2
     container_name: peluqueria-db
     restart: always
     ports:
-      - 5432:5432
+      - ${DB_PORT}:5432
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=peluqueria
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     volumes:
       - ./postgres:/var/lib/postgresql/data

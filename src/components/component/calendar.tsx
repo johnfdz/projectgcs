@@ -14,57 +14,111 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import moment from "moment";
 import "moment/locale/es";
-import { Event } from "@prisma/client";
+import { Event, Services } from "@prisma/client";
 import { createEvent, deleteEvent } from "@/Events/actions";
 import { useRouter } from "next/navigation";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { comment } from "postcss";
+import { useSession } from "next-auth/react";
 
 moment.locale("es");
 const localizer = momentLocalizer(moment);
 
 interface Props {
   events: Event[];
+  services: Services[];
 }
 
-export const MyCalendar = ({ events = [] }: Props) => {
+export const MyCalendar = ({ events = [], services = [] }: Props) => {
   // const [events, setEvents] = useState<Event[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [eventTitle, setEventTitle] = useState("");
+  const [selectedService, setSelectedService] = useState<Services | null>(null);
+  const [eventDescription, setEventDescription] = useState("");
+  const [eventComment, setEventComment] = useState("");
   const [selectEvent, setSelectEvent] = useState<Event | null>(null);
   const router = useRouter();
+  const { data: session } = useSession();
 
-  const handleSelectSlot = (slotInfo: any) => {
+  const handleSelectSlot = ({ start, end }: any) => {
     setShowModal(true);
-    setSelectedDate(slotInfo.start);
     setSelectEvent(null);
+    setSelectedService(null);
+    setEventComment("");
+    setSelectedDate(start);
   };
+
   const handleSelectedEvent = async (event: Event) => {
     setShowModal(true);
     setSelectEvent(event);
-    setEventTitle(event.name);
+    setSelectedService(
+      services.find((service) => service.id === event.serviceId) || null
+    );
+    setEventComment(event.comment);
   };
 
   const saveEvent = async () => {
-    if (eventTitle && selectedDate) {
-      if (selectEvent) {
-        // const updatedEvent = { ...selectEvent, title: eventTitle };
-        // const updatedEvents = events.map((event) =>
-        //   event === selectEvent ? updatedEvent : event
-        // );
-        // setEvents(updatedEvents);
-      } else {
-        const newEvent = {
-          name: eventTitle,
-          start: selectedDate,
-          end: moment(selectedDate).add(1, "hours").toDate(),
-        };
-        await createEvent(newEvent.name, newEvent.start, newEvent.end);
-        router.refresh();
+    try {
+      if (selectedDate) {
+        if (selectEvent) {
+          // const updatedEvent = { ...selectEvent, title: eventTitle };
+          // const updatedEvents = events.map((event) =>
+          //   event === selectEvent ? updatedEvent : event
+          // );
+          // setEvents(updatedEvents);
+        } else {
+          if (!selectedService) {
+            alert("Please select a service");
+            return;
+          }
+          const start = moment(selectedDate).toDate();
+          const end = moment(selectedDate)
+            .add(selectedService.duration, "hours")
+            .toDate();
+          const overlappingEvent = events.some(
+            (event) =>
+              (start >= event.start && start < event.end) ||
+              (end > event.start && end <= event.end) ||
+              (start <= event.start && end >= event.end)
+          );
+
+          if (overlappingEvent) {
+            alert("Ya existe una cita en este rango de tiempo.");
+            return;
+          }
+          const newEvent = {
+            comment: eventComment,
+            start: selectedDate,
+            end: moment(selectedDate)
+              .add(selectedService.duration, "hours")
+              .toDate(),
+            serviceId: selectedService.id,
+            clientId: session?.user?.id,
+            clientEmail: session?.user?.email ?? "",
+          };
+          await createEvent(
+            newEvent.comment,
+            newEvent.start,
+            newEvent.end,
+            newEvent.serviceId,
+            newEvent.clientId,
+            newEvent.clientEmail
+          );
+        }
+        setShowModal(false);
+        setEventDescription("");
+        setSelectEvent(null);
       }
-      setShowModal(false);
-      setEventTitle("");
-      setSelectEvent(null);
+    } catch (error) {
+      alert("Error al guardar la cita");
+    } finally {
+      router.refresh();
     }
   };
 
@@ -72,7 +126,7 @@ export const MyCalendar = ({ events = [] }: Props) => {
     if (selectEvent) {
       await deleteEvent(selectEvent.id);
       setShowModal(false);
-      setEventTitle("");
+      setEventDescription("");
       setSelectEvent(null);
       router.refresh();
     }
@@ -125,12 +179,44 @@ export const MyCalendar = ({ events = [] }: Props) => {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="eventTitle">Event Title</Label>
+              <Label htmlFor="eventTitle">Servicio</Label>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    {selectedService ? selectedService.name : "Select Service"}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {services.map((service) => (
+                    <DropdownMenuItem
+                      key={service.id}
+                      onClick={() => {
+                        setSelectedService(service);
+                      }}
+                    >
+                      {service.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Label htmlFor="eventDescription">Descripcion</Label>
               <Input
-                value={eventTitle}
-                onChange={(e) => setEventTitle(e.target.value)}
-                id="eventTitle"
-                placeholder="Enter event title"
+                value={
+                  selectedService
+                    ? `Nombre: ${selectedService?.name} - Precio: ${selectedService?.price} - Duracion: ${selectedService?.duration}h`
+                    : ""
+                }
+                onChange={(e) => setEventDescription(e.target.value)}
+                id="eventDescription"
+                placeholder="Descripcion"
+                disabled
+              />
+              <Label htmlFor="eventComment">Comentario</Label>
+              <Input
+                value={eventComment}
+                onChange={(e) => setEventComment(e.target.value)}
+                id="eventComment"
+                placeholder="Comentario"
                 required
               />
             </div>
@@ -148,7 +234,7 @@ export const MyCalendar = ({ events = [] }: Props) => {
                 variant="outline"
                 onClick={() => {
                   setShowModal(false);
-                  setEventTitle("");
+                  setEventDescription("");
                   setSelectEvent(null);
                 }}
               >

@@ -13,18 +13,102 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum EventStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
 model Event {
-  id        String   @id @default(uuid())
-  name      String
+  id        String      @id @default(uuid())
+  comment   String
   start     DateTime
   end       DateTime
-  status    String   @default("pending")
-  attendees User[]
+  service   Services    @relation(fields: [serviceId], references: [id])
+  serviceId String
+  status    EventStatus @default(PENDING)
+  client    User        @relation(fields: [clientId], references: [id])
+  clientId  String
+  createdAt DateTime    @default(now())
+}
+
+// model User {
+//   id        String   @id @default(uuid())
+//   name      String
+//   email     String   @unique
+//   password  String
+//   role      UserRole @default(CLIENT)
+//   events    Event[]
+//   createdAt DateTime @default(now())
+// }
+
+model Services {
+  id        String   @id @default(uuid())
+  name      String
+  price     Float
+  duration  Int
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  Event     Event[]
+}
+
+// Auth
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
 
 model User {
-  id     String  @id @default(uuid())
-  name   String
-  email  String  @unique
-  events Event[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  status        Boolean   @default(true)
+  accounts      Account[]
+  sessions      Session[]
+  role          UserRole  @default(CLIENT)
+  events        Event[]
+  createdAt     DateTime  @default(now())
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
 }

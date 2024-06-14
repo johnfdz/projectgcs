@@ -1,7 +1,11 @@
 "use server";
 
+import { EmailTemplate } from "@/components/emails/NewEventEmail";
 import prisma from "@/lib/prisma";
 import { Event } from "@prisma/client";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const getEvents = async () => {
   const events = await prisma.event.findMany();
@@ -9,11 +13,29 @@ export const getEvents = async () => {
 };
 
 export const createEvent = async (
-  name: string,
+  comment: string,
   start: Date,
-  end: Date
+  end: Date,
+  serviceId: string,
+  clientId: string,
+  userEmail: string
 ): Promise<Event | Object> => {
-  const event = await prisma.event.create({ data: { name, start, end } });
+  const event = await prisma.event.create({
+    data: { comment, start, end, serviceId, clientId },
+  });
+  const service = await prisma.services.findUnique({
+    where: { id: event.serviceId },
+  });
+  if (event && service) {
+    const resend = new Resend();
+    await resend.emails.send({
+      from: "Salon Chic <onboarding@resend.dev>",
+      to: [userEmail],
+      subject: "Nueva Cita",
+      react: EmailTemplate({ Event: event, Service: service }),
+    });
+  }
+
   return event;
 };
 
@@ -29,23 +51,5 @@ export const deleteEvent = async (id: string) => {
 
 export const deleteAllEvents = async () => {
   const events = await prisma.event.deleteMany();
-  return events;
-};
-
-export const seedEvents = async () => {
-  const events = await prisma.event.createMany({
-    data: [
-      {
-        name: "Meeting",
-        start: new Date(),
-        end: new Date(),
-      },
-      {
-        name: "Meeting 2",
-        start: new Date(),
-        end: new Date(),
-      },
-    ],
-  });
   return events;
 };
