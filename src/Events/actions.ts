@@ -8,7 +8,9 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const getEvents = async () => {
-  const events = await prisma.event.findMany();
+  const events = await prisma.event.findMany({
+    include: { service: true },
+  });
   return events;
 };
 
@@ -22,17 +24,16 @@ export const createEvent = async (
 ): Promise<Event | Object> => {
   const event = await prisma.event.create({
     data: { comment, start, end, serviceId, clientId },
+    include: { service: true },
   });
-  const service = await prisma.services.findUnique({
-    where: { id: event.serviceId },
-  });
-  if (event && service) {
+
+  if (event) {
     const resend = new Resend();
     await resend.emails.send({
       from: "Salon Chic <onboarding@resend.dev>",
       to: [userEmail],
       subject: "Nueva Cita",
-      react: EmailTemplate({ Event: event, Service: service }),
+      react: EmailTemplate({ Event: event, Service: event.service }),
     });
   }
 

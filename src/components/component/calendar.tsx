@@ -35,6 +35,15 @@ interface Props {
   services: Services[];
 }
 
+// const CustomEvent = (event: Event) => {
+//   return (
+//     <span>
+//       <strong>{event.title}</strong>
+//       {event.desc && ":  " + event.desc}
+//     </span>
+//   );
+// };
+
 export const MyCalendar = ({ events = [], services = [] }: Props) => {
   // const [events, setEvents] = useState<Event[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -99,7 +108,7 @@ export const MyCalendar = ({ events = [], services = [] }: Props) => {
               .add(selectedService.duration, "hours")
               .toDate(),
             serviceId: selectedService.id,
-            clientId: session?.user?.id,
+            clientId: session?.user?.id ?? "",
             clientEmail: session?.user?.email ?? "",
           };
           await createEvent(
