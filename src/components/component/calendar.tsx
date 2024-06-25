@@ -24,7 +24,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { comment } from "postcss";
 import { useSession } from "next-auth/react";
 
 moment.locale("es");
@@ -35,17 +34,7 @@ interface Props {
   services: Services[];
 }
 
-// const CustomEvent = (event: Event) => {
-//   return (
-//     <span>
-//       <strong>{event.title}</strong>
-//       {event.desc && ":  " + event.desc}
-//     </span>
-//   );
-// };
-
 export const MyCalendar = ({ events = [], services = [] }: Props) => {
-  // const [events, setEvents] = useState<Event[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedService, setSelectedService] = useState<Services | null>(null);
