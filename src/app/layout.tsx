@@ -6,6 +6,7 @@ import { DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/component/navbar";
 import AuthProvider from "@/auth/components/AuthProvider";
+import { Sidebar } from "@/components/ui/sidebar/Sidebar";
 
 const yeseva_one = Yeseva_One({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <html lang="en">
         <body className={yeseva_one.variable + " " + dm_serif_display.variable}>
           <Navbar />
+          <Sidebar />
           {children}
         </body>
       </html>

@@ -1,16 +1,15 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
 import { Calendar } from "@/components";
 import { getEvents } from "@/Events/actions";
 import { getServices } from "@/Services/actions";
 import { redirect } from "next/navigation";
 import "@/components/component/styles/general-calendar.css";
+import { auth } from "@/auth.config";
 
 export default async function NuevaCitaPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
-  if (!session) {
-    redirect("/api/auth/signin");
+  if (!session?.user) {
+    redirect("/auth/login");
   }
 
   const events = await getEvents();

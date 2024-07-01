@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
+import bcrypt from "bcryptjs";
 
 export async function GET(request: Request) {
   await prisma.services.createMany({
@@ -33,6 +34,23 @@ export async function GET(request: Request) {
         name: "Maquillaje",
         duration: 5,
         price: 200,
+      },
+    ],
+  });
+
+  await prisma.user.createMany({
+    data: [
+      {
+        email: "admin@admin.com",
+        name: "Admin",
+        password: bcrypt.hashSync("administrator"),
+        role: "ADMIN",
+      },
+      {
+        email: "user@user.com",
+        name: "User",
+        password: bcrypt.hashSync("user10"),
+        role: "CLIENT",
       },
     ],
   });

@@ -1,10 +1,13 @@
 "use client";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useUIStore } from "../ui/sidebar/sidebaropen";
 
 export const Navbar = () => {
   const { data: session } = useSession();
   console.log(session);
+  const openSideMenu = useUIStore((state) => state.openSideMenu);
+
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center">
       <Link className="flex items-center justify-center" href="/">
@@ -12,7 +15,7 @@ export const Navbar = () => {
         <span className="text-xl font-bold">Salon Chic</span>
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
-        <Link
+        {/* <Link
           className="text-sm font-medium hover:underline underline-offset-4"
           href="#"
         >
@@ -26,12 +29,6 @@ export const Navbar = () => {
             >
               Agendar Cita
             </Link>
-            {/* <Link
-              className="text-sm font-medium hover:underline underline-offset-4"
-              href="#"
-            >
-              {session.user?.name}
-            </Link> */}
             <Link
               className="text-sm font-medium hover:underline underline-offset-4"
               href="#"
@@ -48,7 +45,13 @@ export const Navbar = () => {
           >
             Iniciar Sesión
           </Link>
-        )}
+        )} */}
+        <button
+          onClick={openSideMenu}
+          className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
+        >
+          Menú
+        </button>
       </nav>
     </header>
   );

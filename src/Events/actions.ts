@@ -18,7 +18,7 @@ export const createEvent = async (
   comment: string,
   start: Date,
   end: Date,
-  serviceId: string,
+  serviceId: number,
   clientId: string,
   userEmail: string
 ): Promise<Event | Object> => {

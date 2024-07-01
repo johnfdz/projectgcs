@@ -30,7 +30,7 @@ export function HomePage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <main className="flex-1">
-        <section className="w-full py-6 md:py-12 lg:py-24 xl:py-32" id="hero">
+        <section className="w-full py-6 md:py-6 lg:py-12 xl:py-24" id="hero">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <Image
