@@ -21,6 +21,6 @@ export const EVENT_COLORS = [
 ];
 
 export const CLIENT_EVENT_COLOR = [
-  { thisUser: true, color: "#FFD700" },
-  { thisUser: false, color: "#008000" },
+  { thisUser: true, color: "#008000", fontColor: "#ffffff" },
+  { thisUser: false, color: "#4A249D", fontColor: "#ffffff" },
 ];

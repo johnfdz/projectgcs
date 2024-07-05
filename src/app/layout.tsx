@@ -1,12 +1,10 @@
-// This is the root layout component for your Next.js app.
-// Learn more: https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#root-layout-required
-
 import { Yeseva_One } from "next/font/google";
 import { DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/component/navbar";
 import AuthProvider from "@/auth/components/AuthProvider";
 import { Sidebar } from "@/components/ui/sidebar/Sidebar";
+import { Footer } from "@/components/component/footer";
 
 const yeseva_one = Yeseva_One({
   subsets: ["latin"],
@@ -29,6 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Navbar />
           <Sidebar />
           {children}
+          <Footer />
         </body>
       </html>
     </AuthProvider>

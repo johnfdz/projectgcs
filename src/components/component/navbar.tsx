@@ -15,37 +15,6 @@ export const Navbar = () => {
         <span className="text-xl font-bold">Salon Chic</span>
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
-        {/* <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          Nosotros
-        </Link>
-        {session ? (
-          <>
-            <Link
-              className="text-sm font-medium hover:underline underline-offset-4"
-              href="/citas/nuevacita"
-            >
-              Agendar Cita
-            </Link>
-            <Link
-              className="text-sm font-medium hover:underline underline-offset-4"
-              href="#"
-              onClick={() => signOut()}
-            >
-              Cerrar Sesión
-            </Link>
-          </>
-        ) : (
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
-            onClick={() => signIn()}
-          >
-            Iniciar Sesión
-          </Link>
-        )} */}
         <button
           onClick={openSideMenu}
           className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"

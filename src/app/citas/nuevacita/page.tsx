@@ -1,18 +1,15 @@
-import { Calendar } from "@/components";
 import { getEvents } from "@/Events/actions";
 import { getServices } from "@/Services/actions";
-import { redirect } from "next/navigation";
 import "@/components/component/styles/general-calendar.css";
-import { auth } from "@/auth.config";
+import ClientCalendar from "@/components/component/client-calendar";
 
 export default async function NuevaCitaPage() {
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect("/auth/login");
-  }
-
   const events = await getEvents();
   const services = await getServices();
-  return <Calendar events={events} services={services} />;
+
+  return (
+    <div className="w-full">
+      <ClientCalendar events={events} services={services} />
+    </div>
+  );
 }

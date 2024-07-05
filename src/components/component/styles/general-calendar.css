@@ -20,9 +20,26 @@
 
 .rbc-time-slot{
     color: #74a4c3;
-    z-index: 1;
+    min-height: 100px;
+    z-index: -1;
 }
+
+.rbc-events-container {
+    width: 100% !important;
+  }
 
 .rbc-time-slot:not(.rbc-today .rbc-time-slot){
     background-color: #eff4f7;
+    min-height: 100px;
 }
+
+.rbc-event,
+.rbc-background-event {
+  z-index: 2;
+  padding: 0px !important;
+  border: none !important;
+}
+
+.rbc-event-label {
+    display: none !important;
+  }

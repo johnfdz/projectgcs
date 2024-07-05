@@ -4,6 +4,7 @@ import { authenticate } from "@/actions";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import { IoInformationOutline } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
 export const LoginForm = () => {
   const [state, dispatch] = useFormState(authenticate, undefined);
 
@@ -42,9 +43,9 @@ export const LoginForm = () => {
             </div>
           )}
         </div>
-        <button type="submit" className="btn-primary">
+        <Button type="submit" variant={"default"} className="">
           Ingresar
-        </button>
+        </Button>
 
         {/* divisor l ine */}
         <div className="flex items-center my-5">

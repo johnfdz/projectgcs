@@ -4,17 +4,18 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useSession, signOut } from "next-auth/react";
 import {
+  IoCalendarClear,
+  IoCalendarOutline,
   IoCloseOutline,
+  IoHomeOutline,
   IoLogInOutline,
   IoLogOutOutline,
   IoPeopleOutline,
-  IoPersonOutline,
-  IoSearchOutline,
-  IoShirtOutline,
   IoTicketOutline,
 } from "react-icons/io5";
 
 import { useUIStore } from "./sidebaropen";
+import { $Enums } from "@prisma/client";
 
 export const Sidebar = () => {
   const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
@@ -22,11 +23,12 @@ export const Sidebar = () => {
 
   const { data: session } = useSession();
   const isAuthenticated = !!session?.user;
-  const isAdmin = session?.user?.role === "ADMIN";
+  const isAdmin = session?.user?.role === $Enums.UserRole.ADMIN;
 
   const handleSignOut = async () => {
     closeMenu();
     await signOut({ redirect: false });
+    window.location.reload();
   };
 
   return (
@@ -47,7 +49,7 @@ export const Sidebar = () => {
       {/* Sidemenu */}
       <nav
         className={clsx(
-          "fixed p-5 right-0 top-0 w-[500px] h-screen bg-white z-20 shadow-2xl transform transition-all duration-300",
+          "fixed p-5 right-0 top-0 w-[400px] h-screen bg-white z-20 shadow-2xl transform transition-all duration-300 overflow-y-scroll",
           {
             "translate-x-full": !isSideMenuOpen,
           }
@@ -59,35 +61,42 @@ export const Sidebar = () => {
           onClick={() => closeMenu()}
         />
 
-        {/* Input */}
-        <div className="relative mt-14">
-          <IoSearchOutline size={20} className="absolute top-2 left-2" />
-          <input
-            type="text"
-            placeholder="Buscar"
-            className="w-full bg-gray-50 rounded pl-10 py-1 pr-10 border-b-2 text-xl border-gray-200 focus:outline-none focus:border-blue-500"
-          />
-        </div>
+        <Link
+          href="/"
+          className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+          onClick={() => closeMenu()}
+        >
+          <IoHomeOutline size={30} />
+          <span className="ml-3 text-xl">Inicio</span>
+        </Link>
+        <Link
+          href="/citas/nuevacita"
+          className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+          onClick={() => closeMenu()}
+        >
+          <IoTicketOutline size={30} />
+          <span className="ml-3 text-xl">Nueva Cita</span>
+        </Link>
 
         {/* Menú */}
 
         {isAuthenticated && (
           <>
-            <Link
+            {/* <Link
               href="/profile"
               onClick={() => closeMenu()}
               className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
             >
               <IoPersonOutline size={30} />
               <span className="ml-3 text-xl">Perfil</span>
-            </Link>
-
+            </Link> */}
             <Link
-              href="/"
+              href="/citas"
               className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+              onClick={() => closeMenu()}
             >
-              <IoTicketOutline size={30} />
-              <span className="ml-3 text-xl">Ordenes</span>
+              <IoPeopleOutline size={30} />
+              <span className="ml-3 text-xl">Mis citas</span>
             </Link>
           </>
         )}
@@ -119,27 +128,20 @@ export const Sidebar = () => {
             <div className="w-full h-px bg-gray-200 my-10" />
 
             <Link
-              href="/"
+              href="/adm"
               className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+              onClick={() => closeMenu()}
             >
-              <IoShirtOutline size={30} />
-              <span className="ml-3 text-xl">Productos</span>
+              <IoCalendarClear size={30} />
+              <span className="ml-3 text-xl">Administar Citas</span>
             </Link>
-
             <Link
-              href="/"
+              href="/adm/calendar"
               className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+              onClick={() => closeMenu()}
             >
-              <IoTicketOutline size={30} />
-              <span className="ml-3 text-xl">Ordenes</span>
-            </Link>
-
-            <Link
-              href="/"
-              className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
-            >
-              <IoPeopleOutline size={30} />
-              <span className="ml-3 text-xl">Usuarios</span>
+              <IoCalendarOutline size={30} />
+              <span className="ml-3 text-xl">Calendario de Citas</span>
             </Link>
           </>
         )}

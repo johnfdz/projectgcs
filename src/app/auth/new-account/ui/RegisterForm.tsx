@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import { login, registerUser } from "@/actions";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 type FormInputs = {
   name: string;
@@ -75,7 +76,7 @@ export const RegisterForm = () => {
 
       <span className="text-red-500">{errorMessage} </span>
 
-      <button className="btn-primary">Crear cuenta</button>
+      <Button>Crear cuenta</Button>
 
       {/* divisor l ine */}
       <div className="flex items-center my-5">

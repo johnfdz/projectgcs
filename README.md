@@ -40,3 +40,17 @@ npx prisma init
 npx prisma migrate dev
 npx prisma generate
 ```
+
+# Usuarios por defecto
+
+1. Administrador:
+
+   _admin@admin.com_
+
+   _administrator_
+
+2. Usuario:
+
+   _user@user.com_
+
+   _user10_
