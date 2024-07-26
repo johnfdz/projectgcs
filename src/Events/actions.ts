@@ -18,7 +18,7 @@ export const getClientEvents = async (clientId: string) => {
   const events = await prisma.event.findMany({
     where: {
       clientId,
-      status: EventStatus.PENDING,
+      status: EventStatus.PENDING || EventStatus.CONFIRMED,
       start: { gte: new Date() },
     },
     include: { service: true },
@@ -38,6 +38,7 @@ export const createEvent = async (
     // Verificar eventos superpuestos en la base de datos
     const overlappingEvent = await prisma.event.findMany({
       where: {
+        status: EventStatus.PENDING || EventStatus.CONFIRMED,
         AND: [
           { start: { lt: end } }, // Menor que end
           { end: { gt: start } }, // Mayor que start

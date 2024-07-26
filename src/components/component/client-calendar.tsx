@@ -76,31 +76,12 @@ export default function ClientCalendar({ events, services }: CalendarProps) {
       e.preventDefault();
       if (selectedDate) {
         if (selectEvent) {
-          // const updatedEvent = { ...selectEvent, title: eventTitle };
-          // const updatedEvents = events.map((event) =>
-          //   event === selectEvent ? updatedEvent : event
-          // );
-          // setEvents(updatedEvents);
         } else {
           if (!selectedService) {
             alert("Please select a service");
             return;
           }
-          //   const start = moment(selectedDate).toDate();
-          //   const end = moment(selectedDate)
-          //     .add(selectedService.duration, "hours")
-          //     .toDate();
-          //   const overlappingEvent = events.some(
-          //     (event) =>
-          //       (start >= event.start && start < event.end) ||
-          //       (end > event.start && end <= event.end) ||
-          //       (start <= event.start && end >= event.end)
-          //   );
 
-          //   if (overlappingEvent) {
-          //     alert("Ya existe una cita en este rango de tiempo.");
-          //     return;
-          //   }
           const newEvent = {
             comment: eventComment,
             start: selectedDate,
@@ -155,7 +136,6 @@ export default function ClientCalendar({ events, services }: CalendarProps) {
   return (
     <>
       <Calendar
-        services={services}
         events={events}
         onSelectSlot={handleSelectSlot}
         defaultView={Views.WEEK}

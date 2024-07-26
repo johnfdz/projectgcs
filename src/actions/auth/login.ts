@@ -15,7 +15,6 @@ export async function authenticate(
     return "Success";
   } catch (error) {
     if (error instanceof AuthError) {
-      console.log({ error }, "mi error");
       switch (error.type) {
         case "CallbackRouteError":
           return "Invalid credentials.";

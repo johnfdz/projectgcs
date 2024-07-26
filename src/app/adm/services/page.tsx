@@ -18,16 +18,9 @@ export default async function ServicesPage() {
                 peluquería.
               </p>
             </div>
-            <div className="flex gap-4">
-              <Button>Crear Nuevo Servicio</Button>
-            </div>
           </div>
-          <div className="border rounded-lg p-6 shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Servicios Disponibles</h2>
-            <div className="overflow-auto">
-              <AdmTableServices services={services} />
-            </div>
-          </div>
+
+          <AdmTableServices services={services} />
         </div>
       </div>
     </>
