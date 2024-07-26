@@ -16,7 +16,11 @@ export const getEvents = async () => {
 
 export const getClientEvents = async (clientId: string) => {
   const events = await prisma.event.findMany({
-    where: { clientId, status: EventStatus.PENDING },
+    where: {
+      clientId,
+      status: EventStatus.PENDING,
+      start: { gte: new Date() },
+    },
     include: { service: true },
   });
   return events;
@@ -80,4 +84,12 @@ export const deleteEvent = async (id: string) => {
 export const deleteAllEvents = async () => {
   const events = await prisma.event.deleteMany();
   return events;
+};
+
+export const confirmEvent = async (id: string) => {
+  const event = await prisma.event.update({
+    where: { id },
+    data: { status: EventStatus.CONFIRMED },
+  });
+  return event;
 };

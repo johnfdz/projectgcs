@@ -9,7 +9,10 @@ export default async function NuevaCitaPage() {
 
   return (
     <div className="w-full">
-      <ClientCalendar events={events} services={services} />
+      <ClientCalendar
+        events={events}
+        services={services.filter((f) => f.status === true)}
+      />
     </div>
   );
 }

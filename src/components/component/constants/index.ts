@@ -1,9 +1,12 @@
 import { Views } from "react-big-calendar";
 
-export const EVEN_STATUS_COLORS = {
-  PENDING: "#FFD700",
-  CONFIRMED: "#008000",
-  CANCELLED: "#FF0000",
+export const EVEN_STATUS_COLORS: Record<
+  string,
+  "default" | "secondary" | "destructive" | "outline"
+> = {
+  PENDING: "secondary",
+  CONFIRMED: "default",
+  CANCELLED: "destructive",
 };
 
 export const VIEW_OPTIONS = [
