@@ -6,34 +6,29 @@ export async function GET(request: Request) {
   await prisma.services.createMany({
     data: [
       {
-        id: 1,
         name: "Corte de cabello",
         duration: 1,
-        price: 150,
+        price: 15.0,
       },
       {
-        id: 2,
         name: "Manicure",
         duration: 2,
-        price: 200,
+        price: 20.0,
       },
       {
-        id: 3,
         name: "Pedicure",
         duration: 2,
-        price: 200,
+        price: 12.0,
       },
       {
-        id: 4,
         name: "Depilación",
         duration: 3,
-        price: 200,
+        price: 25.0,
       },
       {
-        id: 5,
         name: "Maquillaje",
         duration: 5,
-        price: 200,
+        price: 200.0,
       },
     ],
   });
@@ -43,13 +38,13 @@ export async function GET(request: Request) {
       {
         email: "admin@admin.com",
         name: "Admin",
-        password: bcrypt.hashSync("administrator"),
+        password: bcrypt.hashSync("123456"),
         role: "ADMIN",
       },
       {
         email: "user@user.com",
         name: "User",
-        password: bcrypt.hashSync("user10"),
+        password: bcrypt.hashSync("123456"),
         role: "CLIENT",
       },
     ],

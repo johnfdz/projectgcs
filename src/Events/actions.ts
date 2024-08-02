@@ -30,7 +30,7 @@ export const createEvent = async (
   comment: string,
   start: Date,
   end: Date,
-  serviceId: number,
+  serviceId: string,
   clientId: string,
   userEmail: string
 ): Promise<Event | Object> => {

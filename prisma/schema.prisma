@@ -29,7 +29,7 @@ model Event {
   comment   String
   start     DateTime
   end       DateTime
-  serviceId Int
+  serviceId String
   service   Services    @relation(fields: [serviceId], references: [id])
   status    EventStatus @default(PENDING)
   clientId  String
@@ -40,7 +40,7 @@ model Event {
 }
 
 model Services {
-  id        Int      @id
+  id        String   @id @default(uuid())
   name      String
   price     Float
   duration  Int
